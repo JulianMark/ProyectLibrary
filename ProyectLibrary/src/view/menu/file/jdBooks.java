@@ -9,6 +9,7 @@ import controller.menu.file.BooksController;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import model.books.Book;
+import view.utils.Utils;
 
 /**
  *
@@ -16,13 +17,15 @@ import model.books.Book;
  */
 public class jdBooks extends javax.swing.JDialog {
     
+    private final Utils utils;
     private final BooksController cnnBooks;
             
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         cnnBooks = new BooksController();
-        fillListBooks();
+        utils = new Utils();
+        utils.fillJList(cnnBooks.getBooks(), lstBooks);
     }
 
     /**
@@ -107,16 +110,7 @@ public class jdBooks extends javax.swing.JDialog {
             }
         });
     }
-    
-    public void fillListBooks(){
-        DefaultListModel model = new DefaultListModel();
-        ArrayList<Book> books = cnnBooks.getBooks();
-        for (Book book : books) {
-            model.addElement(book);
-        }
-        lstBooks.setModel(model);
-    }
-
+      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> lstBooks;
