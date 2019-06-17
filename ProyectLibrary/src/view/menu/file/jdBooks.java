@@ -5,18 +5,24 @@
  */
 package view.menu.file;
 
+import controller.menu.file.BooksController;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import model.books.Book;
+
 /**
  *
  * @author Nana
  */
 public class jdBooks extends javax.swing.JDialog {
-
-    /**
-     * Creates new form jdBooks
-     */
+    
+    private final BooksController cnnBooks;
+            
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        cnnBooks = new BooksController();
+        fillListBooks();
     }
 
     /**
@@ -28,17 +34,33 @@ public class jdBooks extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstBooks = new javax.swing.JList<>();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lstBooks.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lstBooks);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(98, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
@@ -85,7 +107,18 @@ public class jdBooks extends javax.swing.JDialog {
             }
         });
     }
+    
+    public void fillListBooks(){
+        DefaultListModel model = new DefaultListModel();
+        ArrayList<Book> books = cnnBooks.getBooks();
+        for (Book book : books) {
+            model.addElement(book);
+        }
+        lstBooks.setModel(model);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> lstBooks;
     // End of variables declaration//GEN-END:variables
 }
