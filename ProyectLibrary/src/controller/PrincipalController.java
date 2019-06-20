@@ -26,7 +26,7 @@ public abstract class PrincipalController {
 
     public void openConnection() throws SQLException {
         try {
-            String url = "";
+            String url = "jdbc:sqlserver://DESKTOP-HUVNI1J\\SQLEXPRESS:1433;databaseName=LIBRARY";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
             con = DriverManager.getConnection(url, "sa", "1234");
             System.out.println("Conexión a la BD");
