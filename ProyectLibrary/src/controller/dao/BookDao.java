@@ -124,7 +124,7 @@ public class BookDao implements SimpleObjectDao{
                 String nameTemp = rs.getString(2);
                 int idAuthorTemp = rs.getInt(3);
                 int idGenderTemp = rs.getInt(4);
-
+                bookDTO = new BookDTO();
                 bookDTO.setId(idTemp);
                 bookDTO.setName(nameTemp);
                 bookDTO.setIdAuthor(idAuthorTemp);

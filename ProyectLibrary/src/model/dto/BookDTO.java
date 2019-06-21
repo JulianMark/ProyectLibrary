@@ -56,8 +56,7 @@ public class BookDTO {
 
     @Override
     public String toString() {
-        return "BookDTO{" + "id=" + id + ", name=" + name + 
-               ", idGender=" + idGender + ", idAuthor=" + idAuthor + '}';
+        return name;
     }
     
     
