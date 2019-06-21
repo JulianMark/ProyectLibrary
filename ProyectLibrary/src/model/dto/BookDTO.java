@@ -3,21 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.books;
+package model.dto;
 
 /**
  *
- * @author Nana
+ * @author Julian
  */
-public class Book {
+public class BookDTO {
     private int id;
     private String name;
     private int idGender;
     private int idAuthor;
 
-    public Book(int id, String name) {
+    public BookDTO() {
+    }
+
+    public BookDTO(int id) {
         this.id = id;
-        this.name = name;
     }
 
     public int getId() {
@@ -54,7 +56,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return name;
+        return "BookDTO{" + "id=" + id + ", name=" + name + 
+               ", idGender=" + idGender + ", idAuthor=" + idAuthor + '}';
     }
-      
+    
+    
 }

@@ -5,10 +5,11 @@
  */
 package view.menu.file;
 
-import controller.menu.file.BooksController;
-import java.util.ArrayList;
-import javax.swing.DefaultListModel;
-import model.books.Book;
+import controller.SimpleObjectDao;
+import controller.dao.BookDao;
+import java.sql.SQLException;
+import java.util.List;
+import model.dto.BookDTO;
 import view.utils.Utils;
 
 /**
@@ -16,16 +17,15 @@ import view.utils.Utils;
  * @author Nana
  */
 public class jdBooks extends javax.swing.JDialog {
-    
+    SimpleObjectDao simpleObjectDao;
     private final Utils utils;
-    private final BooksController cnnBooks;
             
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        cnnBooks = new BooksController();
         utils = new Utils();
-        utils.fillJList(cnnBooks.getBooks(), lstBooks);
+        fillBooksList();
+       
     }
 
     /**
@@ -109,6 +109,19 @@ public class jdBooks extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private void fillBooksList () {
+        simpleObjectDao = new BookDao();
+        try {
+            List <BookDTO> books = simpleObjectDao.select();
+             utils.fillJList(books, lstBooks);
+
+        } catch (SQLException e) {
+            System.out.println("Excepcion en la carga de lista de books");
+            e.printStackTrace();
+        }
+        
     }
       
     // Variables declaration - do not modify//GEN-BEGIN:variables

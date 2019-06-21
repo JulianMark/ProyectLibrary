@@ -5,10 +5,10 @@
  */
 package books.test;
 
-import books.dto.BookDTO;
-import books.jdbc.BookDao;
-import books.jdbc.BookDaoJDBC;
+import model.dto.BookDTO;
+import controller.dao.BookDao;
 import java.sql.SQLException;
+import controller.SimpleObjectDao;
 
 /**
  *
@@ -22,7 +22,7 @@ public class TestListBooks {
     public static void main(String[] args) {
          //Utilizamos el tipo interface como referencia
         //a una clase concreta
-        BookDao bookDao = new BookDaoJDBC();
+        SimpleObjectDao bookDao = new BookDao();
 
         //Creamos un nuevo registro
         //Hacemos uso de la clase persona DTO la cual se usa

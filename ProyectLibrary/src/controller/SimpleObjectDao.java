@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package books.jdbc;
+package controller;
 
-import books.dto.BookDTO;
+import model.dto.BookDTO;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Julian
  */
-public interface BookDao {
+public interface SimpleObjectDao {
     
     public int insert (BookDTO book) throws SQLException;
     

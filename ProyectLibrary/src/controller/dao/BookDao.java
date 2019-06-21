@@ -3,21 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package books.jdbc;
+package controller.dao;
 
-import books.dto.BookDTO;
+import controller.Connexion;
+import model.dto.BookDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import controller.SimpleObjectDao;
 
 /**
  *
  * @author Julian
  */
-public class BookDaoJDBC implements BookDao{
+public class BookDao implements SimpleObjectDao{
     
     private Connection userConn;
 
@@ -29,10 +31,10 @@ public class BookDaoJDBC implements BookDao{
 
     private final String SQL_SELECT = "SELECT id, name, id_author, id_gender FROM books ORDER BY name";
 
-    public BookDaoJDBC() {
+    public BookDao() {
     }
 
-    public BookDaoJDBC(Connection userConn) {
+    public BookDao(Connection userConn) {
         this.userConn = userConn;
     }
     

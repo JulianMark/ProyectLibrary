@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package books.jdbc;
+package controller;
 
 import java.sql.Connection;
 import java.sql.Driver;
