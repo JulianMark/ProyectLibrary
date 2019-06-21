@@ -5,26 +5,26 @@
  */
 package view.menu.file;
 
-import controller.SimpleObjectDao;
 import controller.dao.BookDao;
 import java.sql.SQLException;
 import java.util.List;
 import model.dto.BookDTO;
 import view.utils.Utils;
+import controller.SimpleObjDao;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
  * @author Nana
  */
 public class jdBooks extends javax.swing.JDialog {
-    SimpleObjectDao simpleObjectDao;
-    private final Utils utils;
-            
+    private SimpleObjDao simpleObjDao;
+    private DefaultComboBoxModel modelCboGenders;
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        utils = new Utils();
         fillBooksList();
+       // fillCboAuthorsBooks();
        
     }
 
@@ -39,6 +39,16 @@ public class jdBooks extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         lstBooks = new javax.swing.JList<>();
+        txtNameBook = new javax.swing.JTextField();
+        cboAuthorsBook = new javax.swing.JComboBox<>();
+        cboGendersBook = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -49,25 +59,97 @@ public class jdBooks extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(lstBooks);
 
+        txtNameBook.setText("Nombre del libro");
+        txtNameBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNameBookActionPerformed(evt);
+            }
+        });
+
+        cboAuthorsBook.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aquí todos los autores" }));
+
+        cboGendersBook.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aquí todos los géneros" }));
+
+        jButton1.setText("Nuevo");
+
+        jButton2.setText("Aceptar");
+
+        jButton3.setText("Modificar");
+
+        jButton4.setText("Cancelar");
+
+        jTextField1.setText("Buscar por nombre ?");
+
+        jButton5.setText("Ir");
+
+        jLabel1.setText("Propiedades del libro");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtNameBook)
+                            .addComponent(cboAuthorsBook, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboGendersBook, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addGap(24, 24, 24))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(49, 49, 49))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtNameBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cboAuthorsBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cboGendersBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton4)))
+                    .addComponent(jScrollPane1))
+                .addGap(15, 15, 15))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtNameBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameBookActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNameBookActionPerformed
 
     /**
      * @param args the command line arguments
@@ -112,20 +194,42 @@ public class jdBooks extends javax.swing.JDialog {
     }
     
     private void fillBooksList () {
-        simpleObjectDao = new BookDao();
+        simpleObjDao = new BookDao();
         try {
-            List <BookDTO> books = simpleObjectDao.select();
-             utils.fillJList(books, lstBooks);
+            List <BookDTO> books = simpleObjDao.select();
+            Utils.fillJList(books, lstBooks);
 
         } catch (SQLException e) {
             System.out.println("Excepcion en la carga de lista de books");
             e.printStackTrace();
-        }
-        
+        }    
     }
+    
+//    private void fillCboAuthorsBooks () {
+//        modelCboGenders = new DefaultComboBoxModel();
+//        simpleObjDao = new BookDao();
+//        try {
+//            List <BookDTO> list = simpleObjDao.select();
+//            Utils.fillComboBox(modelCboGenders, list, cboAuthorsBook);
+//
+//        } catch (SQLException e) {
+//            System.out.println("Excepcion en la carga de lista de books");
+//            e.printStackTrace();
+//        }      
+//    }
       
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cboAuthorsBook;
+    private javax.swing.JComboBox<String> cboGendersBook;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JList<String> lstBooks;
+    private javax.swing.JTextField txtNameBook;
     // End of variables declaration//GEN-END:variables
 }

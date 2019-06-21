@@ -5,7 +5,6 @@
  */
 package view.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -21,12 +20,12 @@ public class Utils {
     public Utils() {
     }
     
-    public void fillComboBox(DefaultComboBoxModel model,ArrayList list, JComboBox jCombo) {
+    public static void fillComboBox(DefaultComboBoxModel model,List list, JComboBox jCombo) {
         list.forEach((object) -> { model.addElement(object); });
         jCombo.setModel(model);
     }
     
-    public void fillJList (List list, JList jList) {
+    public static void fillJList (List list, JList jList) {
         DefaultListModel model = new DefaultListModel();        
         list.stream().filter((object) -> (object != null)).forEachOrdered((object) -> { model.addElement(object); });
         jList.setModel(model);   

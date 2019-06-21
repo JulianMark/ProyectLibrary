@@ -9,8 +9,7 @@ package model.dto;
  *
  * @author Julian
  */
-public class BookDTO {
-    private int id;
+public class BookDTO extends SimpleObjDTO{
     private String name;
     private int idGender;
     private int idAuthor;
@@ -19,14 +18,6 @@ public class BookDTO {
     }
 
     public BookDTO(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
         this.id = id;
     }
 

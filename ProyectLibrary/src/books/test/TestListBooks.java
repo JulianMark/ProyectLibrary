@@ -8,7 +8,7 @@ package books.test;
 import model.dto.BookDTO;
 import controller.dao.BookDao;
 import java.sql.SQLException;
-import controller.SimpleObjectDao;
+import controller.SimpleObjDao;
 
 /**
  *
@@ -22,7 +22,7 @@ public class TestListBooks {
     public static void main(String[] args) {
          //Utilizamos el tipo interface como referencia
         //a una clase concreta
-        SimpleObjectDao bookDao = new BookDao();
+        SimpleObjDao bookDao = new BookDao();
 
         //Creamos un nuevo registro
         //Hacemos uso de la clase persona DTO la cual se usa

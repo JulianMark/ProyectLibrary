@@ -30,7 +30,7 @@ public class Connexion {
                 Class jdbcDriverClass = Class.forName(JDBC_DRIVER);
                 driver = (Driver) jdbcDriverClass.newInstance();
                 DriverManager.registerDriver(driver);
-            } catch (Exception e) {
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | SQLException e) {
                 System.out.println("Fallo en cargar el driver JDBC");
                 e.printStackTrace();
             }

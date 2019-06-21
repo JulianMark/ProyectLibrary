@@ -5,21 +5,21 @@
  */
 package controller;
 
-import model.dto.BookDTO;
 import java.sql.SQLException;
 import java.util.List;
+import model.dto.SimpleObjDTO;
 
 /**
  *
  * @author Julian
  */
-public interface SimpleObjectDao {
+public interface SimpleObjDao <T extends SimpleObjDTO> {
     
-    public int insert (BookDTO book) throws SQLException;
+    public int insert (T object) throws SQLException;
     
-    public int update (BookDTO book) throws SQLException;
+    public int update (T object) throws SQLException;
     
-    public int delete (BookDTO book) throws SQLException;
+    public int delete (T object) throws SQLException;
     
-    public List <BookDTO> select() throws SQLException;
+    public List<T> select() throws SQLException;
 }

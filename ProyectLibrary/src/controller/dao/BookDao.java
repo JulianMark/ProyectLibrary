@@ -13,13 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import controller.SimpleObjectDao;
+import controller.SimpleObjDao;
 
 /**
  *
  * @author Julian
  */
-public class BookDao implements SimpleObjectDao{
+public class BookDao implements SimpleObjDao<BookDTO>{
     
     private Connection userConn;
 
@@ -113,8 +113,8 @@ public class BookDao implements SimpleObjectDao{
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        BookDTO bookDTO = null;
-        List<BookDTO> books = new ArrayList<BookDTO>();
+        BookDTO bookDTO;
+        List<BookDTO> books = new ArrayList<>();
         try {
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT);
