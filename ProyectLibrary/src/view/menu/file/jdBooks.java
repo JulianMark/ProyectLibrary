@@ -5,12 +5,12 @@
  */
 package view.menu.file;
 
-import controller.dao.BookDao;
+import controller.dao.simpledao.BookDao;
 import java.sql.SQLException;
 import java.util.List;
 import model.dto.BookDTO;
 import view.utils.Utils;
-import controller.SimpleObjDao;
+import controller.dao.simpledao.SimpleObjDao;
 import javax.swing.DefaultComboBoxModel;
 
 /**

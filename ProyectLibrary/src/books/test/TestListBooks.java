@@ -6,9 +6,9 @@
 package books.test;
 
 import model.dto.BookDTO;
-import controller.dao.BookDao;
+import controller.dao.simpledao.BookDao;
 import java.sql.SQLException;
-import controller.SimpleObjDao;
+import controller.dao.simpledao.SimpleObjDao;
 
 /**
  *

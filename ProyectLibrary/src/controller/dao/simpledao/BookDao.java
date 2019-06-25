@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.dao;
+package controller.dao.simpledao;
 
 import controller.Connexion;
 import model.dto.BookDTO;
@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import controller.SimpleObjDao;
 
 /**
  *

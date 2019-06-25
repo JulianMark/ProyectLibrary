@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.dao.simpledao;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,6 +12,7 @@ import model.dto.SimpleObjDTO;
 /**
  *
  * @author Julian
+ * @param <T>
  */
 public interface SimpleObjDao <T extends SimpleObjDTO> {
     
