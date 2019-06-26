@@ -6,12 +6,14 @@
 package view.menu.file;
 
 import controller.dao.simpledao.BookDao;
+import controller.dao.simpledao.GenderDao;
 import java.sql.SQLException;
 import java.util.List;
 import model.dto.BookDTO;
 import view.utils.Utils;
 import controller.dao.simpledao.SimpleObjDao;
 import javax.swing.DefaultComboBoxModel;
+import model.dto.GenderDTO;
 
 /**
  *
@@ -24,6 +26,7 @@ public class jdBooks extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         fillBooksList();
+        fillGendersCbo();
        // fillCboAuthorsBooks();
        
     }
@@ -203,6 +206,20 @@ public class jdBooks extends javax.swing.JDialog {
             System.out.println("Excepcion en la carga de lista de books");
             e.printStackTrace();
         }    
+    }
+    
+    private void fillGendersCbo(){
+        simpleObjDao = new GenderDao();
+        modelCboGenders = new DefaultComboBoxModel();
+        try {
+            List<GenderDTO> genders = simpleObjDao.select();
+            Utils.fillComboBox(modelCboGenders, genders, cboGendersBook);
+            
+        } catch (Exception e) {
+            System.out.println("Excepcion en la carga del combo de genders");
+            e.printStackTrace();
+        }
+                
     }
     
 //    private void fillCboAuthorsBooks () {

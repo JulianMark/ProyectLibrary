@@ -15,6 +15,10 @@ public abstract class SimpleObjDTO {
     public SimpleObjDTO() {
     }
 
+    public SimpleObjDTO(int id) {
+        this.id = id;
+    }
+    
     public int getId() {
         return id;
     }
