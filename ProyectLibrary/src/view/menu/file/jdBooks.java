@@ -27,7 +27,7 @@ public class jdBooks extends javax.swing.JDialog {
         initComponents();
         fillBooksList();
         fillGendersCbo();
-       // fillCboAuthorsBooks();
+       fillCboAuthorsBooks();
        
     }
 
@@ -222,18 +222,18 @@ public class jdBooks extends javax.swing.JDialog {
                 
     }
     
-//    private void fillCboAuthorsBooks () {
-//        modelCboGenders = new DefaultComboBoxModel();
-//        simpleObjDao = new BookDao();
-//        try {
-//            List <BookDTO> list = simpleObjDao.select();
-//            Utils.fillComboBox(modelCboGenders, list, cboAuthorsBook);
-//
-//        } catch (SQLException e) {
-//            System.out.println("Excepcion en la carga de lista de books");
-//            e.printStackTrace();
-//        }      
-//    }
+    private void fillCboAuthorsBooks () {
+        modelCboGenders = new DefaultComboBoxModel();
+        simpleObjDao = new BookDao();
+        try {
+            List <BookDTO> list = simpleObjDao.select();
+            Utils.fillComboBox(modelCboGenders, list, cboAuthorsBook);
+
+        } catch (SQLException e) {
+            System.out.println("Excepcion en la carga de lista de books");
+            e.printStackTrace();
+        }      
+    }
       
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cboAuthorsBook;

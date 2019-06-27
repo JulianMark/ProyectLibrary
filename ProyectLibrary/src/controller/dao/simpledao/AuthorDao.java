@@ -12,33 +12,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.dto.GenderDTO;
+import model.dto.AuthorDTO;
+import model.dto.BookDTO;
+import model.dto.SimpleObjDTO;
 
 /**
  *
  * @author Nana
  */
-public class GenderDao implements SimpleObjDao<GenderDTO>{
+public class AuthorDao implements SimpleObjDao <AuthorDTO>{
     
     private Connection userConn;
 
-    private final String SQL_INSERT = "INSERT INTO genders (description) VALUES(?)";
+    private final String SQL_INSERT = "INSERT INTO authors_books (name, lastname) VALUES(?,?)";
 
-    private final String SQL_UPDATE = "UPDATE genders SET description= ? WHERE id= ?";
+    private final String SQL_UPDATE = "UPDATE authors_books SET name= ?, lastname= ? WHERE id= ?";
 
-    private final String SQL_DELETE = "DELETE FROM genders WHERE id = ?";
+    private final String SQL_DELETE = "DELETE FROM authors_books WHERE id = ?";
 
-    private final String SQL_SELECT = "SELECT id, description FROM genders ORDER BY description";
+    private final String SQL_SELECT = "SELECT id, name, lastname FROM authors_books ORDER BY lastname";
 
-    public GenderDao() {
+    public AuthorDao() {
     }
 
-    public GenderDao(Connection userConn) {
+    public AuthorDao(Connection userConn) {
         this.userConn = userConn;
     }
-    
+
     @Override
-    public int insert(GenderDTO gender) throws SQLException {
+    public int insert(AuthorDTO author) throws SQLException {
          Connection conn = null;
         PreparedStatement stmt = null;
         int rows = 0;
@@ -46,7 +48,8 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             stmt = conn.prepareStatement(SQL_INSERT);
             int index = 1;
-            stmt.setString(index, gender.getDescription());
+            stmt.setString(index++, author.getName());
+            stmt.setString(index, author.getLastname());
             System.out.println("Ejecutando query:" + SQL_INSERT);
             rows = stmt.executeUpdate();
             System.out.println("Registros afectados:" + rows);
@@ -60,15 +63,16 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
     }
 
     @Override
-    public int update(GenderDTO gender) throws SQLException {
-          Connection conn = null;
+    public int update(AuthorDTO author) throws SQLException {
+         Connection conn = null;
         PreparedStatement stmt = null;
         int rows = 0;
         try {
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             stmt = conn.prepareStatement(SQL_UPDATE);
             int index = 1;
-            stmt.setString(index, gender.getDescription());
+            stmt.setString(index++, author.getName());
+            stmt.setString(index++, author.getLastname());
             System.out.println("Ejecutando query:" + SQL_UPDATE);
             rows = stmt.executeUpdate();
             System.out.println("Registros actualizados:" + rows);
@@ -82,15 +86,15 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
     }
 
     @Override
-    public int delete(GenderDTO gender) throws SQLException {
-          Connection conn = null;
+    public int delete(AuthorDTO author) throws SQLException {
+        Connection conn = null;
         PreparedStatement stmt = null;
         int rows = 0;
         try {
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             System.out.println("Ejecutando query:" + SQL_DELETE);
             stmt = conn.prepareStatement(SQL_DELETE);
-            stmt.setInt(1, gender.getId());
+            stmt.setInt(1, author.getId());
             rows = stmt.executeUpdate();
             System.out.println("Registros eliminados:" + rows);
         } finally {
@@ -103,23 +107,25 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
     }
 
     @Override
-    public List<GenderDTO> select() throws SQLException {
-        Connection conn = null;
+    public List<AuthorDTO> select() throws SQLException {
+         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        GenderDTO genderDTO;
-        List<GenderDTO> genders = new ArrayList<>();
+        AuthorDTO authorDTO;
+        List<AuthorDTO> authors = new ArrayList<>();
         try {
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT);
             rs = stmt.executeQuery();
             while (rs.next()) {
                 int idTemp = rs.getInt(1);
-                String descriptionTemp = rs.getString(2);
-                genderDTO = new GenderDTO();
-                genderDTO.setId(idTemp);
-                genderDTO.setDescription(descriptionTemp);
-                genders.add(genderDTO);
+                String nameTemp = rs.getString(2);
+                String lastnameTemp = rs.getString(3);
+                authorDTO = new AuthorDTO();
+                authorDTO.setId(idTemp);
+                authorDTO.setName(nameTemp);
+                authorDTO.setLastname(lastnameTemp);
+                authors.add(authorDTO);
             }
         } finally {
             Connexion.close(rs);
@@ -128,8 +134,7 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
                 Connexion.close(conn);
             }
         }
-        return genders;
-       
+        return authors;
     }
-    
+
 }
