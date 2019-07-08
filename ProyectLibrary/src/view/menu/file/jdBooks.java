@@ -5,6 +5,7 @@
  */
 package view.menu.file;
 
+import controller.dao.simpledao.AuthorDao;
 import controller.dao.simpledao.BookDao;
 import controller.dao.simpledao.GenderDao;
 import java.sql.SQLException;
@@ -12,7 +13,9 @@ import java.util.List;
 import model.dto.BookDTO;
 import view.utils.Utils;
 import controller.dao.simpledao.SimpleObjDao;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
+import model.dto.AuthorDTO;
 import model.dto.GenderDTO;
 
 /**
@@ -22,11 +25,15 @@ import model.dto.GenderDTO;
 public class jdBooks extends javax.swing.JDialog {
     private SimpleObjDao simpleObjDao;
     private DefaultComboBoxModel modelCboGenders;
+    private DefaultComboBoxModel modelCboAuthors;
+    private List <BookDTO> listBooks;
+    
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        listBooks = new ArrayList<>();
         fillBooksList();
-        fillGendersCbo();
+        fillCboGendersBook();
         fillCboAuthorsBooks();
        
     }
@@ -60,25 +67,20 @@ public class jdBooks extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        lstBooks.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstBooksValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(lstBooks);
 
         txtNameBook.setText("Nombre del libro");
-        txtNameBook.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNameBookActionPerformed(evt);
-            }
-        });
 
         cboAuthorsBook.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aquí todos los autores" }));
 
         cboGendersBook.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aquí todos los géneros" }));
 
         jButton1.setText("Nuevo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jButton2.setText("Aceptar");
 
@@ -155,13 +157,11 @@ public class jdBooks extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNameBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameBookActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNameBookActionPerformed
+    private void lstBooksValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBooksValueChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        fillFieldFromJListBooks(lstBooks.getSelectedIndex());
+        
+    }//GEN-LAST:event_lstBooksValueChanged
 
     /**
      * @param args the command line arguments
@@ -208,8 +208,8 @@ public class jdBooks extends javax.swing.JDialog {
     private void fillBooksList () {
         simpleObjDao = new BookDao();
         try {
-            List <BookDTO> books = simpleObjDao.select();
-            Utils.fillJList(books, lstBooks);
+            listBooks = simpleObjDao.select();
+            Utils.fillJList(listBooks, lstBooks);
 
         } catch (SQLException e) {
             System.out.println("Excepcion en la carga de lista de books");
@@ -217,7 +217,7 @@ public class jdBooks extends javax.swing.JDialog {
         }    
     }
     
-    private void fillGendersCbo(){
+    private void fillCboGendersBook(){
         simpleObjDao = new GenderDao();
         modelCboGenders = new DefaultComboBoxModel();
         try {
@@ -232,18 +232,45 @@ public class jdBooks extends javax.swing.JDialog {
     }
     
     private void fillCboAuthorsBooks () {
-        modelCboGenders = new DefaultComboBoxModel();
-        simpleObjDao = new BookDao();
+        modelCboAuthors = new DefaultComboBoxModel();
+        simpleObjDao = new AuthorDao();
         try {
-            List <BookDTO> list = simpleObjDao.select();
-            Utils.fillComboBox(modelCboGenders, list, cboAuthorsBook);
+            List <AuthorDTO> authors = simpleObjDao.select();
+            Utils.fillComboBox(modelCboAuthors, authors, cboAuthorsBook);
 
         } catch (SQLException e) {
             System.out.println("Excepcion en la carga de lista de books");
             e.printStackTrace();
         }      
     }
-      
+    
+    private void fillFieldFromJListBooks (int i) {
+        txtNameBook.setText(listBooks.get(i).getName());
+        selectGenderFromJListBooks(listBooks.get(i).getIdGender());
+        selectAuthorFromJListBooks(listBooks.get(i).getIdAuthor());
+    }
+    
+    private void selectGenderFromJListBooks(int id){
+        for (int i = 0; i < cboGendersBook.getItemCount(); i++) {
+            GenderDTO g =  (GenderDTO) modelCboGenders.getElementAt(i);
+            if (g.getId() == id){
+                cboGendersBook.setSelectedIndex(i);
+                return;
+            }
+        }
+    }
+    
+    private void selectAuthorFromJListBooks(int id){
+        for (int i = 0; i < cboAuthorsBook.getItemCount(); i++) {
+            AuthorDTO a = (AuthorDTO) modelCboAuthors.getElementAt(id);
+            if (a.getId() == id){
+                cboAuthorsBook.setSelectedIndex(id);
+                return;
+            }
+            
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cboAuthorsBook;
     private javax.swing.JComboBox<String> cboGendersBook;
