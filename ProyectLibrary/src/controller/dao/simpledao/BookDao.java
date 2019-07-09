@@ -71,8 +71,8 @@ public class BookDao implements SimpleObjDao<BookDTO>{
             stmt = conn.prepareStatement(SQL_UPDATE);
             int index = 1;
             stmt.setString(index++, book.getName());
-            stmt.setInt(index++, book.getIdGender());
             stmt.setInt(index++, book.getIdAuthor());
+            stmt.setInt(index++, book.getIdGender());
             stmt.setInt(index, book.getId());
             System.out.println("Ejecutando query:" + SQL_UPDATE);
             rows = stmt.executeUpdate();

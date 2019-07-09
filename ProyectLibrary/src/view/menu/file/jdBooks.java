@@ -15,6 +15,7 @@ import view.utils.Utils;
 import controller.dao.simpledao.SimpleObjDao;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import model.dto.AuthorDTO;
 import model.dto.GenderDTO;
 
@@ -27,6 +28,8 @@ public class jdBooks extends javax.swing.JDialog {
     private DefaultComboBoxModel modelCboGenders;
     private DefaultComboBoxModel modelCboAuthors;
     private List <BookDTO> listBooks;
+    private boolean flagBtnNew;
+    private boolean flagBtnEdit;
     
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -35,7 +38,8 @@ public class jdBooks extends javax.swing.JDialog {
         fillBooksList();
         fillCboGendersBook();
         fillCboAuthorsBooks();
-       
+        flagBtnNew = false;
+        flagBtnEdit = false;      
     }
 
     /**
@@ -52,10 +56,10 @@ public class jdBooks extends javax.swing.JDialog {
         txtNameBook = new javax.swing.JTextField();
         cboAuthorsBook = new javax.swing.JComboBox<>();
         cboGendersBook = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
+        btnSend = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -80,13 +84,28 @@ public class jdBooks extends javax.swing.JDialog {
 
         cboGendersBook.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aquí todos los géneros" }));
 
-        jButton1.setText("Nuevo");
+        btnNew.setText("Nuevo");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Aceptar");
+        btnSend.setText("Aceptar");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Modificar");
+        btnEdit.setText("Modificar");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Cancelar");
+        btnCancel.setText("Cancelar");
 
         jTextField1.setText("Buscar por nombre ?");
 
@@ -115,12 +134,12 @@ public class jdBooks extends javax.swing.JDialog {
                             .addComponent(cboGendersBook, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addComponent(btnEdit, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnCancel, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(24, 24, 24))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -144,12 +163,12 @@ public class jdBooks extends javax.swing.JDialog {
                         .addComponent(cboGendersBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton3))
+                            .addComponent(btnNew)
+                            .addComponent(btnEdit))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
-                            .addComponent(jButton4)))
+                            .addComponent(btnSend)
+                            .addComponent(btnCancel)))
                     .addComponent(jScrollPane1))
                 .addGap(15, 15, 15))
         );
@@ -158,10 +177,58 @@ public class jdBooks extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstBooksValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBooksValueChanged
-
         fillFieldFromJListBooks(lstBooks.getSelectedIndex());
-        
     }//GEN-LAST:event_lstBooksValueChanged
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        simpleObjDao = new BookDao();
+        
+        String nameBook = txtNameBook.getText();
+        AuthorDTO author = (AuthorDTO) cboAuthorsBook.getSelectedItem();
+        GenderDTO gender = (GenderDTO) cboGendersBook.getSelectedItem();
+        
+        BookDTO book = new BookDTO();
+        book.setName(nameBook);
+        book.setIdAuthor(author.getId());
+        book.setIdGender(gender.getId());
+        int result = 0;
+        if (flagBtnNew){
+            try {
+                result = simpleObjDao.insert(book); 
+            } catch (SQLException e) {
+              System.out.println("Excepcion en el insert de nuevo libro");
+              e.printStackTrace();  
+            }
+            if (result > 0){
+                JOptionPane.showMessageDialog(null, "Se agrego correctamente el libro");
+            }else {
+                JOptionPane.showMessageDialog(null, "No se agrego correctamente el libro");
+            }
+        }else if (flagBtnEdit) {
+            book.setId(listBooks.get(lstBooks.getSelectedIndex()).getId());
+            try {
+                result = simpleObjDao.update(book); 
+            } catch (SQLException e) {
+              System.out.println("Excepcion en el update de un libro");
+              e.printStackTrace();  
+            }
+            if (result > 0){
+                JOptionPane.showMessageDialog(null, "Se actualizo correctamente el libro");
+            }else {
+                JOptionPane.showMessageDialog(null, "No se actualizo correctamente el libro");
+            }
+        }
+    }//GEN-LAST:event_btnSendActionPerformed
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        flagBtnNew = true;
+        cleanField();
+        txtNameBook.requestFocus();
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        flagBtnEdit = true;
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,7 +277,6 @@ public class jdBooks extends javax.swing.JDialog {
         try {
             listBooks = simpleObjDao.select();
             Utils.fillJList(listBooks, lstBooks);
-
         } catch (SQLException e) {
             System.out.println("Excepcion en la carga de lista de books");
             e.printStackTrace();
@@ -224,7 +290,7 @@ public class jdBooks extends javax.swing.JDialog {
             List<GenderDTO> genders = simpleObjDao.select();
             Utils.fillComboBox(modelCboGenders, genders, cboGendersBook);
             
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Excepcion en la carga del combo de genders");
             e.printStackTrace();
         }
@@ -262,22 +328,27 @@ public class jdBooks extends javax.swing.JDialog {
     
     private void selectAuthorFromJListBooks(int id){
         for (int i = 0; i < cboAuthorsBook.getItemCount(); i++) {
-            AuthorDTO a = (AuthorDTO) modelCboAuthors.getElementAt(id);
+            AuthorDTO a = (AuthorDTO) modelCboAuthors.getElementAt(i);
             if (a.getId() == id){
-                cboAuthorsBook.setSelectedIndex(id);
+                cboAuthorsBook.setSelectedIndex(i);
                 return;
             }
-            
         }
+    }
+    
+    private void cleanField () {
+        txtNameBook.setText("");
+        cboAuthorsBook.setSelectedIndex(-1);
+        cboGendersBook.setSelectedIndex(-1);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnSend;
     private javax.swing.JComboBox<String> cboAuthorsBook;
     private javax.swing.JComboBox<String> cboGendersBook;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
