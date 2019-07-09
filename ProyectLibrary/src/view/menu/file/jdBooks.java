@@ -34,12 +34,9 @@ public class jdBooks extends javax.swing.JDialog {
     public jdBooks(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        listBooks = new ArrayList<>();
-        fillBooksList();
-        fillCboGendersBook();
-        fillCboAuthorsBooks();
-        flagBtnNew = false;
-        flagBtnEdit = false;      
+        instanceInitComponent();
+        fillInitComponent();
+        turnOnOffInitComponent(true);
     }
 
     /**
@@ -60,8 +57,8 @@ public class jdBooks extends javax.swing.JDialog {
         btnSend = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        txtSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -77,8 +74,6 @@ public class jdBooks extends javax.swing.JDialog {
             }
         });
         jScrollPane1.setViewportView(lstBooks);
-
-        txtNameBook.setText("Nombre del libro");
 
         cboAuthorsBook.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aquí todos los autores" }));
 
@@ -106,10 +101,18 @@ public class jdBooks extends javax.swing.JDialog {
         });
 
         btnCancel.setText("Cancelar");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
-        jTextField1.setText("Buscar por nombre ?");
-
-        jButton5.setText("Ir");
+        btnSearch.setText("Ir");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Propiedades del libro");
 
@@ -121,9 +124,9 @@ public class jdBooks extends javax.swing.JDialog {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5))
+                        .addComponent(btnSearch))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,8 +153,8 @@ public class jdBooks extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,42 +184,50 @@ public class jdBooks extends javax.swing.JDialog {
     }//GEN-LAST:event_lstBooksValueChanged
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
-        simpleObjDao = new BookDao();
-        
-        String nameBook = txtNameBook.getText();
-        AuthorDTO author = (AuthorDTO) cboAuthorsBook.getSelectedItem();
-        GenderDTO gender = (GenderDTO) cboGendersBook.getSelectedItem();
-        
-        BookDTO book = new BookDTO();
-        book.setName(nameBook);
-        book.setIdAuthor(author.getId());
-        book.setIdGender(gender.getId());
-        int result = 0;
-        if (flagBtnNew){
-            try {
-                result = simpleObjDao.insert(book); 
-            } catch (SQLException e) {
-              System.out.println("Excepcion en el insert de nuevo libro");
-              e.printStackTrace();  
+        if (validateFill()){
+            
+            simpleObjDao = new BookDao();
+
+            String nameBook = txtNameBook.getText();
+            AuthorDTO author = (AuthorDTO) cboAuthorsBook.getSelectedItem();
+            GenderDTO gender = (GenderDTO) cboGendersBook.getSelectedItem();
+
+            BookDTO book = new BookDTO();
+            book.setName(nameBook);
+            book.setIdAuthor(author.getId());
+            book.setIdGender(gender.getId());
+            int result = 0;
+            if (flagBtnNew){
+                try {
+                    result = simpleObjDao.insert(book); 
+                } catch (SQLException e) {
+                  System.out.println("Excepcion en el insert de nuevo libro");
+                  e.printStackTrace();  
+                }
+                if (result > 0){
+                    JOptionPane.showMessageDialog(null, "Se agrego correctamente el libro "+book.getName());
+                    fillBooksList();
+                }else {
+                    JOptionPane.showMessageDialog(null, "No se agrego correctamente el libro");
+                }
+                flagBtnNew = false;
+            }else if (flagBtnEdit) {
+                book.setId(listBooks.get(lstBooks.getSelectedIndex()).getId());
+                try {
+                    result = simpleObjDao.update(book); 
+                } catch (SQLException e) {
+                  System.out.println("Excepcion en el update de un libro");
+                  e.printStackTrace();  
+                }
+                if (result > 0){
+                    JOptionPane.showMessageDialog(null, "Se actualizo correctamente el libro");
+                    fillBooksList();
+                }else {
+                    JOptionPane.showMessageDialog(null, "No se actualizo correctamente el libro");
+                }
+                flagBtnEdit = false;
             }
-            if (result > 0){
-                JOptionPane.showMessageDialog(null, "Se agrego correctamente el libro");
-            }else {
-                JOptionPane.showMessageDialog(null, "No se agrego correctamente el libro");
-            }
-        }else if (flagBtnEdit) {
-            book.setId(listBooks.get(lstBooks.getSelectedIndex()).getId());
-            try {
-                result = simpleObjDao.update(book); 
-            } catch (SQLException e) {
-              System.out.println("Excepcion en el update de un libro");
-              e.printStackTrace();  
-            }
-            if (result > 0){
-                JOptionPane.showMessageDialog(null, "Se actualizo correctamente el libro");
-            }else {
-                JOptionPane.showMessageDialog(null, "No se actualizo correctamente el libro");
-            }
+            turnOnOffInitComponent(true);
         }
     }//GEN-LAST:event_btnSendActionPerformed
 
@@ -224,11 +235,34 @@ public class jdBooks extends javax.swing.JDialog {
         flagBtnNew = true;
         cleanField();
         txtNameBook.requestFocus();
+        turnOnOffInitComponent(false);
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         flagBtnEdit = true;
+        txtNameBook.requestFocus();
+        turnOnOffInitComponent(false);    
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        flagBtnNew = false;
+        flagBtnEdit = false;
+        turnOnOffInitComponent(true);
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        simpleObjDao = new BookDao();
+        try {
+            if (!listBooks.isEmpty()){
+                listBooks.clear();
+            }
+            listBooks = simpleObjDao.select_for_name(txtSearch.getText());
+            Utils.fillJList(listBooks, lstBooks);
+        } catch (SQLException e) {
+            System.out.println("Excepcion en la carga de lista de books");
+            e.printStackTrace();
+        } 
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -341,19 +375,67 @@ public class jdBooks extends javax.swing.JDialog {
         cboAuthorsBook.setSelectedIndex(-1);
         cboGendersBook.setSelectedIndex(-1);
     }
+    
+    private void turnOnOffInitComponent(boolean x){
+        txtSearch.setEnabled(x);
+        btnSearch.setEnabled(x);
+        lstBooks.setEnabled(x);
+        txtNameBook.setEnabled(!x);
+        cboAuthorsBook.setEnabled(!x);
+        cboGendersBook.setEnabled(!x);
+        btnNew.setEnabled(x);
+        btnEdit.setEnabled(x);
+        btnSend.setEnabled(!x);
+        btnCancel.setEnabled(!x);
+    }
+    
+    private void instanceInitComponent() {
+        listBooks = new ArrayList<>();
+        flagBtnNew = false;
+        flagBtnEdit = false; 
+    }
+    
+    private void fillInitComponent() {
+        fillBooksList();
+        fillCboGendersBook();
+        fillCboAuthorsBooks();
+    }
+    
+    private boolean validateFill () {
+        boolean validate = true;
+        if (txtNameBook.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "El nombre del libro no puede ser vacío");
+            txtNameBook.requestFocus();
+            validate = false;
+            return validate;
+        }
+        if (cboAuthorsBook.getSelectedIndex() < 0){
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un autor para el libro");
+            cboAuthorsBook.requestFocus();
+            validate = false;
+            return validate;
+        }
+        if (cboGendersBook.getSelectedIndex() < 0){
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un genero para el libro");
+            cboGendersBook.requestFocus();
+            validate = false;
+            return validate;
+        }
+        return validate;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSend;
     private javax.swing.JComboBox<String> cboAuthorsBook;
     private javax.swing.JComboBox<String> cboGendersBook;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JList<String> lstBooks;
     private javax.swing.JTextField txtNameBook;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

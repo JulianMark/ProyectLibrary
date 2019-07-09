@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.dto.AuthorDTO;
-import model.dto.BookDTO;
-import model.dto.SimpleObjDTO;
 
 /**
  *
@@ -135,6 +133,11 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
             }
         }
         return authors;
+    }
+
+    @Override
+    public List<AuthorDTO> select_for_name(String description) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

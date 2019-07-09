@@ -23,4 +23,6 @@ public interface SimpleObjDao <T extends SimpleObjDTO> {
     public int delete (T object) throws SQLException;
     
     public List<T> select() throws SQLException;
+    
+    public List<T> select_for_name(String description) throws SQLException;
 }

@@ -30,6 +30,10 @@ public class BookDao implements SimpleObjDao<BookDTO>{
 
     private final String SQL_SELECT = "SELECT id, name, id_author, id_gender FROM books ORDER BY name";
 
+    private final String SQL_SELECT_FOR_NAME = "SELECT id, name, id_author, id_gender FROM books \n" +
+                                               "WHERE name like ?\n" +
+                                               "ORDER BY name";
+    
     public BookDao() {
     }
 
@@ -117,6 +121,44 @@ public class BookDao implements SimpleObjDao<BookDTO>{
         try {
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idTemp = rs.getInt(1);
+                String nameTemp = rs.getString(2);
+                int idAuthorTemp = rs.getInt(3);
+                int idGenderTemp = rs.getInt(4);
+                bookDTO = new BookDTO();
+                bookDTO.setId(idTemp);
+                bookDTO.setName(nameTemp);
+                bookDTO.setIdAuthor(idAuthorTemp);
+                bookDTO.setIdGender(idGenderTemp);
+                books.add(bookDTO);
+            }
+        } finally {
+            Connexion.close(rs);
+            Connexion.close(stmt);
+            if (this.userConn == null) {
+                Connexion.close(conn);
+            }
+        }
+        return books;
+    }    
+    
+    @Override
+    public List<BookDTO> select_for_name(String name) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        BookDTO bookDTO;
+        List<BookDTO> books = new ArrayList<>();
+        StringBuilder search = new StringBuilder();
+        search.append("%");
+        search.append(name);
+        search.append("%");
+        try {
+            conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
+            stmt = conn.prepareStatement(SQL_SELECT_FOR_NAME);
+            stmt.setString(1, search.toString());
             rs = stmt.executeQuery();
             while (rs.next()) {
                 int idTemp = rs.getInt(1);

@@ -131,5 +131,10 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
         return genders;
        
     }
+
+    @Override
+    public List<GenderDTO> select_for_name(String description) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
