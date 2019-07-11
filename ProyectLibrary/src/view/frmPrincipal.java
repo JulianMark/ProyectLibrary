@@ -5,6 +5,7 @@
  */
 package view;
 
+import view.menu.file.jdAuthors;
 import view.menu.file.jdBooks;
 
 /**
@@ -33,6 +34,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         menuFrmPrincipal = new javax.swing.JMenuBar();
         menuFileFrmPrincipal = new javax.swing.JMenu();
         goToWindowBooks = new javax.swing.JMenuItem();
+        goToWindowAuthors = new javax.swing.JMenuItem();
         menuOptionsFrmPrincipal = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -46,6 +48,14 @@ public class frmPrincipal extends javax.swing.JFrame {
             }
         });
         menuFileFrmPrincipal.add(goToWindowBooks);
+
+        goToWindowAuthors.setText("Autores");
+        goToWindowAuthors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goToWindowAuthorsActionPerformed(evt);
+            }
+        });
+        menuFileFrmPrincipal.add(goToWindowAuthors);
 
         menuFrmPrincipal.add(menuFileFrmPrincipal);
 
@@ -73,6 +83,12 @@ public class frmPrincipal extends javax.swing.JFrame {
          dialog.setLocationRelativeTo(this);
          dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowBooksActionPerformed
+
+    private void goToWindowAuthorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowAuthorsActionPerformed
+         jdAuthors dialog = new jdAuthors(this,true);
+         dialog.setLocationRelativeTo(this);
+         dialog.setVisible(true);
+    }//GEN-LAST:event_goToWindowAuthorsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -110,6 +126,7 @@ public class frmPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem goToWindowAuthors;
     private javax.swing.JMenuItem goToWindowBooks;
     private javax.swing.JMenu menuFileFrmPrincipal;
     private javax.swing.JMenuBar menuFrmPrincipal;

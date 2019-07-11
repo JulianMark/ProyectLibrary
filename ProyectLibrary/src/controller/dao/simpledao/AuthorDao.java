@@ -29,6 +29,10 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
     private final String SQL_DELETE = "DELETE FROM authors_books WHERE id = ?";
 
     private final String SQL_SELECT = "SELECT id, name, lastname FROM authors_books ORDER BY lastname";
+    
+    private final String SQL_SELECT_FOR_NAME = "SELECT id, name, lastname FROM authors_books \n" +
+                                              " WHERE lastname like ?\n" +
+                                              " ORDER BY lastname";
 
     public AuthorDao() {
     }
@@ -134,10 +138,41 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
         }
         return authors;
     }
-
+    
     @Override
-    public List<AuthorDTO> select_for_name(String description) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<AuthorDTO> select_for_name(String lastname) throws SQLException {
+         Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        AuthorDTO authorDTO;
+        List<AuthorDTO> authors = new ArrayList<>();
+        StringBuilder search = new StringBuilder();
+        search.append("%");
+        search.append(lastname);
+        search.append("%");
+        try {
+            conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
+            stmt = conn.prepareStatement(SQL_SELECT_FOR_NAME);
+            stmt.setString(1, search.toString());
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idTemp = rs.getInt(1);
+                String lastnameTemp = rs.getString(2);
+                String nameTemp = rs.getString(3);
+                authorDTO = new AuthorDTO();
+                authorDTO.setId(idTemp);
+                authorDTO.setLastname(lastnameTemp);
+                authorDTO.setName(nameTemp);
+                authors.add(authorDTO);
+            }
+        } finally {
+            Connexion.close(rs);
+            Connexion.close(stmt);
+            if (this.userConn == null) {
+                Connexion.close(conn);
+            }
+        }
+        return authors;
     }
 
 }
