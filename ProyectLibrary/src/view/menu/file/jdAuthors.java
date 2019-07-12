@@ -27,6 +27,8 @@ public class jdAuthors extends javax.swing.JDialog {
 
     /**
      * Creates new form jdAuthors
+     * @param parent
+     * @param modal
      */
     public jdAuthors(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -101,7 +103,7 @@ public class jdAuthors extends javax.swing.JDialog {
             }
         });
 
-        txtSearch.setText("Buscar autor");
+        txtSearch.setText("Buscar ");
 
         btnSearch.setText("Ir");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -160,27 +162,33 @@ public class jdAuthors extends javax.swing.JDialog {
                             .addComponent(btnCancel)
                             .addComponent(btnSend)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(76, 76, 76))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstAuthorsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAuthorsValueChanged
-        fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
+        if (lstAuthors.getSelectedIndex() >= 0){
+            fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
+        }
     }//GEN-LAST:event_lstAuthorsValueChanged
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         flagBtnNew = true;
         cleanField();
-        txtLastnameAuthor.requestFocus();
+        txtNameAuthor.requestFocus();
         turnOnOffInitComponent(false);
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        flagBtnEdit = true;
-        txtNameAuthor.requestFocus();
-        turnOnOffInitComponent(false);
+        if (lstAuthors.getSelectedIndex() >= 0) {
+            flagBtnEdit = true;
+            txtNameAuthor.requestFocus();
+            turnOnOffInitComponent(false);
+        } else {
+            JOptionPane.showMessageDialog(null, "Necesario seleccionar un autor de la lista");
+        } 
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -192,45 +200,47 @@ public class jdAuthors extends javax.swing.JDialog {
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         if (validateFill()){
         
-        simpleObjDao = new AuthorDao();
-        
-        String lastname = txtLastnameAuthor.getText();
-        String name = txtNameAuthor.getText();
-        
-        AuthorDTO author = new AuthorDTO();
-        author.setLastname(lastname);
-        author.setName(name);
-        int result = 0;
-        if (flagBtnNew){
-            try {
-                result = simpleObjDao.insert(author);
-            } catch (Exception e) {
-                 System.out.println("Excepcion en el insert de nuevo autor");
-                  e.printStackTrace();
-            } if (result > 0){
-                JOptionPane.showMessageDialog(null, "Se agrego correctamente el autor "+author.getLastname()+author.getName());
-                fillAuthorsBook();
-            }else {
-                JOptionPane.showMessageDialog(null, "No se agrego correctamente el autor");
+            simpleObjDao = new AuthorDao();
+
+            String name = txtNameAuthor.getText();
+            String lastname = txtLastnameAuthor.getText();
+
+            AuthorDTO author = new AuthorDTO();
+            author.setName(name);
+            author.setLastname(lastname);
+            int result = 0;
+            if (flagBtnNew){
+                try {
+                    result = simpleObjDao.insert(author);
+                } catch (SQLException e) {
+                     System.out.println("Excepcion en el insert de nuevo autor");
+                      e.printStackTrace();
+                }
+                if (result > 0){
+                    JOptionPane.showMessageDialog(null, "Se agrego correctamente el autor "+author.getName()+" "+author.getLastname());
+                    fillAuthorsBook();
+                }else {
+                    JOptionPane.showMessageDialog(null, "No se agrego correctamente el autor");
+                }
+                flagBtnNew = false;
+            } else if (flagBtnEdit) {
+                author.setId(listAuthor.get(lstAuthors.getSelectedIndex()).getId());
+                try {
+                    result = simpleObjDao.update(author);
+                } catch (SQLException e) {
+                    System.out.println("Excepcion en el update de nuevo autor");
+                      e.printStackTrace();
+                }
+                if (result > 0){
+                    JOptionPane.showMessageDialog(null, "Se actualizo correctamente el autor");
+                    fillAuthorsBook();
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se actualizo correctamente el autor");
+                }
+                flagBtnEdit = false;
             }
-            flagBtnNew = false;
-        } else if (flagBtnEdit) {
-            author.setId(listAuthor.get(lstAuthors.getSelectedIndex()).getId());
-            try {
-                result = simpleObjDao.update(author);
-            } catch (Exception e) {
-                System.out.println("Excepcion en el update de nuevo autor");
-                  e.printStackTrace();
-            } if (result > 0){
-                JOptionPane.showMessageDialog(null, "Se actualizo correctamente el autor");
-                fillAuthorsBook();
-            } else {
-                JOptionPane.showMessageDialog(null, "No se actualizo correctamente el autor");
-            }
-            flagBtnEdit = false;
-        }
-        turnOnOffInitComponent(true);
-     }  
+            turnOnOffInitComponent(true);
+        }  
     }//GEN-LAST:event_btnSendActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
@@ -312,7 +322,7 @@ public class jdAuthors extends javax.swing.JDialog {
     
     private void turnOnOffInitComponent(boolean x){
         lstAuthors.setEnabled(x);
-        txtLastnameAuthor.setEditable(!x);
+        txtLastnameAuthor.setEnabled(!x);
         txtNameAuthor.setEnabled(!x);
         btnNew.setEnabled(x);
         btnEdit.setEnabled(x);
@@ -322,18 +332,19 @@ public class jdAuthors extends javax.swing.JDialog {
     
     private boolean validateFill() {
         boolean validate = true;
+        if (txtNameAuthor.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "El nombre del autor no puede ser vacío");
+            txtNameAuthor.requestFocus();
+            validate = false;
+            return validate;
+        }
         if (txtLastnameAuthor.getText().equals("")){
             JOptionPane.showMessageDialog(null, "El apellido del autor no puede ser vacío");
             txtLastnameAuthor.requestFocus();
             validate = false;
             return validate;
         }
-        if (txtNameAuthor.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "El nombre del autor no puede ser vacío");
-            txtNameAuthor.requestFocus();
-            validate = false;
-            return validate;
-        } return validate;
+        return validate;
     }    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

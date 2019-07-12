@@ -30,9 +30,9 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
 
     private final String SQL_SELECT = "SELECT id, name, lastname FROM authors_books ORDER BY lastname";
     
-    private final String SQL_SELECT_FOR_NAME = "SELECT id, name, lastname FROM authors_books \n" +
-                                              " WHERE lastname like ?\n" +
-                                              " ORDER BY lastname";
+    private final String SQL_SELECT_FOR_NAME = "SELECT id, name, lastname FROM authors_books\n" +
+                                               "WHERE lastname like ? OR name like ?\n" +
+                                               "ORDER BY lastname";
 
     public AuthorDao() {
     }
@@ -75,6 +75,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
             int index = 1;
             stmt.setString(index++, author.getName());
             stmt.setString(index++, author.getLastname());
+            stmt.setInt(index, author.getId());
             System.out.println("Ejecutando query:" + SQL_UPDATE);
             rows = stmt.executeUpdate();
             System.out.println("Registros actualizados:" + rows);
@@ -154,6 +155,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
             conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT_FOR_NAME);
             stmt.setString(1, search.toString());
+            stmt.setString(2, search.toString());
             rs = stmt.executeQuery();
             while (rs.next()) {
                 int idTemp = rs.getInt(1);

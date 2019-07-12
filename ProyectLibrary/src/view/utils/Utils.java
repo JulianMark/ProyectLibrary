@@ -26,7 +26,7 @@ public class Utils {
     }
     
     public static void fillJList (List list, JList jList) {
-        DefaultListModel model = new DefaultListModel();        
+        DefaultListModel model = new DefaultListModel();
         list.stream().filter((object) -> (object != null)).forEachOrdered((object) -> { model.addElement(object); });
         jList.setModel(model);   
     }

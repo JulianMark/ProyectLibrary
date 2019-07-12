@@ -180,7 +180,8 @@ public class jdBooks extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstBooksValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBooksValueChanged
-        fillFieldFromJListBooks(lstBooks.getSelectedIndex());
+        if (lstBooks.getSelectedIndex() >= 0)
+            fillFieldFromJListBooks(lstBooks.getSelectedIndex());
     }//GEN-LAST:event_lstBooksValueChanged
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
@@ -239,29 +240,32 @@ public class jdBooks extends javax.swing.JDialog {
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        flagBtnEdit = true;
-        txtNameBook.requestFocus();
-        turnOnOffInitComponent(false);    
+        if (lstBooks.getSelectedIndex() >= 0) {
+            flagBtnEdit = true;
+            txtNameBook.requestFocus();
+            turnOnOffInitComponent(false); 
+        }else {
+            JOptionPane.showMessageDialog(null, "Necesario seleccionar un libro de la lista");
+        }   
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         flagBtnNew = false;
         flagBtnEdit = false;
         turnOnOffInitComponent(true);
+        fillFieldFromJListBooks(lstBooks.getSelectedIndex());
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         simpleObjDao = new BookDao();
         try {
-            if (!listBooks.isEmpty()){
-                listBooks.clear();
-            }
             listBooks = simpleObjDao.select_for_name(txtSearch.getText());
             Utils.fillJList(listBooks, lstBooks);
         } catch (SQLException e) {
             System.out.println("Excepcion en la carga de lista de books");
             e.printStackTrace();
         } 
+        cleanField();
     }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
@@ -398,7 +402,9 @@ public class jdBooks extends javax.swing.JDialog {
     private void fillInitComponent() {
         fillBooksList();
         fillCboGendersBook();
+        cboGendersBook.setSelectedIndex(-1);
         fillCboAuthorsBooks();
+        cboAuthorsBook.setSelectedIndex(-1);
     }
     
     private boolean validateFill () {
