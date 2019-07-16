@@ -18,7 +18,7 @@ import java.sql.SQLException;
  */
 public class Connexion {
     private static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    private static final String JDBC_URL = "jdbc:sqlserver://DESKTOP-J8QOGV5\\SQLEXPRESS:1433;databaseName=LIBRARY";
+    private static final String JDBC_URL = "jdbc:sqlserver://DESKTOP-HUVNI1J\\SQLEXPRESS:1433;databaseName=LIBRARY";
     private static final String JDBC_USER = "sa";
     private static final String JDBC_PASS = "1234";
     private static Driver driver = null;

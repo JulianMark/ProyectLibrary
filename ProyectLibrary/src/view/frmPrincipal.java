@@ -7,6 +7,7 @@ package view;
 
 import view.menu.file.jdAuthors;
 import view.menu.file.jdBooks;
+import view.menu.file.jdGenders;
 
 /**
  *
@@ -35,6 +36,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         menuFileFrmPrincipal = new javax.swing.JMenu();
         goToWindowBooks = new javax.swing.JMenuItem();
         goToWindowAuthors = new javax.swing.JMenuItem();
+        goToWindowGenders = new javax.swing.JMenuItem();
         menuOptionsFrmPrincipal = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -56,6 +58,14 @@ public class frmPrincipal extends javax.swing.JFrame {
             }
         });
         menuFileFrmPrincipal.add(goToWindowAuthors);
+
+        goToWindowGenders.setText("Generos");
+        goToWindowGenders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goToWindowGendersActionPerformed(evt);
+            }
+        });
+        menuFileFrmPrincipal.add(goToWindowGenders);
 
         menuFrmPrincipal.add(menuFileFrmPrincipal);
 
@@ -89,6 +99,12 @@ public class frmPrincipal extends javax.swing.JFrame {
          dialog.setLocationRelativeTo(this);
          dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowAuthorsActionPerformed
+
+    private void goToWindowGendersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowGendersActionPerformed
+         jdGenders dialog = new jdGenders (this,true);
+         dialog.setLocationRelativeTo(this);
+         dialog.setVisible(true);
+    }//GEN-LAST:event_goToWindowGendersActionPerformed
 
     /**
      * @param args the command line arguments
@@ -128,6 +144,7 @@ public class frmPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem goToWindowAuthors;
     private javax.swing.JMenuItem goToWindowBooks;
+    private javax.swing.JMenuItem goToWindowGenders;
     private javax.swing.JMenu menuFileFrmPrincipal;
     private javax.swing.JMenuBar menuFrmPrincipal;
     private javax.swing.JMenu menuOptionsFrmPrincipal;

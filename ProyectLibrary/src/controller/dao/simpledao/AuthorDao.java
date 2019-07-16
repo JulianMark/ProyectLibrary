@@ -142,7 +142,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
     
     @Override
     public List<AuthorDTO> select_for_name(String lastname) throws SQLException {
-         Connection conn = null;
+        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         AuthorDTO authorDTO;

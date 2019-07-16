@@ -195,6 +195,7 @@ public class jdAuthors extends javax.swing.JDialog {
         flagBtnNew = false;
         flagBtnEdit = false;
         turnOnOffInitComponent(true);
+        fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed

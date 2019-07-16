@@ -27,8 +27,13 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
     private final String SQL_UPDATE = "UPDATE genders SET description= ? WHERE id= ?";
 
     private final String SQL_DELETE = "DELETE FROM genders WHERE id = ?";
-
+    
     private final String SQL_SELECT = "SELECT id, description FROM genders ORDER BY description";
+
+    private final String SQL_SELECT_FOR_NAME = "SELECT id, description \n" +
+                                               "FROM genders\n" +
+                                               "WHERE description like ?\n" +
+                                               "ORDER BY description";
 
     public GenderDao() {
     }
@@ -134,7 +139,36 @@ public class GenderDao implements SimpleObjDao<GenderDTO>{
 
     @Override
     public List<GenderDTO> select_for_name(String description) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        GenderDTO genderDTO;
+        List<GenderDTO> genders = new ArrayList<>();
+        StringBuilder search = new StringBuilder();
+        search.append("%");
+        search.append(description);
+        search.append("%");
+        try {
+            conn = (this.userConn != null) ? this.userConn : Connexion.getConnection();
+            stmt = conn.prepareStatement(SQL_SELECT_FOR_NAME);
+            stmt.setString(1, search.toString());
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idTemp = rs.getInt(1);
+                String descriptionTemp = rs.getString(2);
+                genderDTO = new GenderDTO();
+                genderDTO.setId(idTemp);
+                genderDTO.setDescription(descriptionTemp);
+                genders.add(genderDTO);
+            }
+        } finally {
+            Connexion.close(rs);
+            Connexion.close(stmt);
+            if (this.userConn == null) {
+                Connexion.close(conn);
+            }
+        }
+        return genders;
     }
     
 }
