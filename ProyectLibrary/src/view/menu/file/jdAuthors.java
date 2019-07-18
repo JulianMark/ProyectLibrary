@@ -256,6 +256,7 @@ public class jdAuthors extends javax.swing.JDialog {
         } catch (SQLException ex) {
             Logger.getLogger(jdAuthors.class.getName()).log(Level.SEVERE, null, ex);
         }
+        cleanField();
     }//GEN-LAST:event_btnSearchActionPerformed
 
     /**

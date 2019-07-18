@@ -242,13 +242,14 @@ public class jdGenders extends javax.swing.JDialog {
        
         try {
             if (!listGender.isEmpty()){
-            listGender.clear();
+                listGender.clear();
             }
             listGender = simpleObjDao.select_for_name(txtSearch.getText());
             Utils.fillJList(listGender, lstGenders);
         } catch (SQLException ex) {
             Logger.getLogger(jdAuthors.class.getName()).log(Level.SEVERE, null, ex);
         }
+        cleanField();
     }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
