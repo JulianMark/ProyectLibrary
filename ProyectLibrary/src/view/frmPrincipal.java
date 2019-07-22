@@ -89,21 +89,21 @@ public class frmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void goToWindowBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowBooksActionPerformed
-         jdBooks dialog = new jdBooks(this,true);
-         dialog.setLocationRelativeTo(this);
-         dialog.setVisible(true);
+        jdBooks dialog = new jdBooks(this,true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowBooksActionPerformed
 
     private void goToWindowAuthorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowAuthorsActionPerformed
-         jdAuthors dialog = new jdAuthors(this,true);
-         dialog.setLocationRelativeTo(this);
-         dialog.setVisible(true);
+        jdAuthors dialog = new jdAuthors(this,true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowAuthorsActionPerformed
 
     private void goToWindowGendersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowGendersActionPerformed
-         jdGenders dialog = new jdGenders (this,true);
-         dialog.setLocationRelativeTo(this);
-         dialog.setVisible(true);
+        jdGenders dialog = new jdGenders (this,true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowGendersActionPerformed
 
     /**
