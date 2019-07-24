@@ -95,7 +95,7 @@ public class frmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_goToWindowBooksActionPerformed
 
     private void goToWindowAuthorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowAuthorsActionPerformed
-        jdAuthors dialog = new jdAuthors(this,true);
+        jdAuthors dialog = new jdAuthors(this,true,true);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowAuthorsActionPerformed

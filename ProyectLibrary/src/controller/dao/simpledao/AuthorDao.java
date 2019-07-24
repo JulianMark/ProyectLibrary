@@ -124,10 +124,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
                 int idTemp = rs.getInt(1);
                 String nameTemp = rs.getString(2);
                 String lastnameTemp = rs.getString(3);
-                authorDTO = new AuthorDTO();
-                authorDTO.setId(idTemp);
-                authorDTO.setName(nameTemp);
-                authorDTO.setLastname(lastnameTemp);
+                authorDTO = new AuthorDTO(idTemp,nameTemp,lastnameTemp);
                 authors.add(authorDTO);
             }
         } finally {
@@ -161,10 +158,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
                 int idTemp = rs.getInt(1);
                 String lastnameTemp = rs.getString(2);
                 String nameTemp = rs.getString(3);
-                authorDTO = new AuthorDTO();
-                authorDTO.setId(idTemp);
-                authorDTO.setLastname(lastnameTemp);
-                authorDTO.setName(nameTemp);
+                authorDTO = new AuthorDTO(idTemp,nameTemp,lastnameTemp);
                 authors.add(authorDTO);
             }
         } finally {

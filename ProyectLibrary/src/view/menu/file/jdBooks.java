@@ -131,11 +131,6 @@ public class jdBooks extends javax.swing.JDialog {
         chkAvailable.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
 
         addAuthor.setText("+");
-        addAuthor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addAuthorActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -210,8 +205,7 @@ public class jdBooks extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstBooksValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBooksValueChanged
-        if (lstBooks.getSelectedIndex() >= 0)
-            fillFieldFromJListBooks(lstBooks.getSelectedIndex());
+        fillFieldFromJListBooks(lstBooks.getSelectedIndex());
     }//GEN-LAST:event_lstBooksValueChanged
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
@@ -298,10 +292,6 @@ public class jdBooks extends javax.swing.JDialog {
         cleanField();
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void addAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAuthorActionPerformed
-       
-    }//GEN-LAST:event_addAuthorActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -360,13 +350,11 @@ public class jdBooks extends javax.swing.JDialog {
         modelCboGenders = new DefaultComboBoxModel();
         try {
             List<GenderDTO> genders = simpleObjDao.select();
-            Utils.fillComboBox(modelCboGenders, genders, cboGendersBook);
-            
+            Utils.fillComboBox(modelCboGenders, genders, cboGendersBook);     
         } catch (SQLException ex) {
             System.out.println("Excepcion en la carga del combo de genders");
             Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                
+        }               
     }
     
     private void fillCboAuthorsBooks () {
@@ -383,10 +371,12 @@ public class jdBooks extends javax.swing.JDialog {
     }
     
     private void fillFieldFromJListBooks (int i) {
-        txtNameBook.setText(listBooks.get(i).getName());
-        selectGenderFromJListBooks(listBooks.get(i).getIdGender());
-        selectAuthorFromJListBooks(listBooks.get(i).getIdAuthor());
-        chkAvailable.setSelected(listBooks.get(i).isAvailable());
+        if (i >= 0){
+            txtNameBook.setText(listBooks.get(i).getName());
+            selectGenderFromJListBooks(listBooks.get(i).getIdGender());
+            selectAuthorFromJListBooks(listBooks.get(i).getIdAuthor());
+            chkAvailable.setSelected(listBooks.get(i).isAvailable());
+        }
     }
     
     private void selectGenderFromJListBooks(int id){
@@ -421,6 +411,7 @@ public class jdBooks extends javax.swing.JDialog {
         lstBooks.setEnabled(x);
         txtNameBook.setEnabled(!x);
         cboAuthorsBook.setEnabled(!x);
+        addAuthor.setEnabled(!x);
         cboGendersBook.setEnabled(!x);
         chkAvailable.setEnabled(!x);
         btnNew.setEnabled(x);
@@ -470,9 +461,8 @@ public class jdBooks extends javax.swing.JDialog {
     
     private void setCloseDialogAuthor() {
         addAuthor.addActionListener((ActionEvent e) -> {
-            jdAuthors dialog = new jdAuthors((Frame) this.getParent(),true);
+            jdAuthors dialog = new jdAuthors((Frame) this.getParent(),true,false);
             dialog.addWindowListener(new WindowAdapter() {
-            
                 @Override
                 public void windowClosed(WindowEvent e) {
                     fillCboAuthorsBooks();
