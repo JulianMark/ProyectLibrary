@@ -24,17 +24,19 @@ public class jdAuthors extends javax.swing.JDialog {
     private List <AuthorDTO> listAuthor;
     private boolean flagBtnNew;
     private boolean flagBtnEdit;
+    private final boolean isAbm;
 
     /**
      * Creates new form jdAuthors
      * @param parent
      * @param modal
+     * @param isAbm
      */
-    public jdAuthors(java.awt.Frame parent, boolean modal) {
+    public jdAuthors(java.awt.Frame parent, boolean modal, boolean isAbm) {
         super(parent, modal);
         initComponents();
-        fillAuthorsBook();
-        turnOnOffInitComponent(true);
+        this.isAbm = isAbm;
+        initialComponents(isAbm);      
     }
     
     /**
@@ -169,9 +171,7 @@ public class jdAuthors extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstAuthorsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAuthorsValueChanged
-        if (lstAuthors.getSelectedIndex() >= 0){
-            fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
-        }
+        fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
     }//GEN-LAST:event_lstAuthorsValueChanged
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
@@ -192,52 +192,27 @@ public class jdAuthors extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        flagBtnNew = false;
-        flagBtnEdit = false;
-        turnOnOffInitComponent(true);
-        fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
+        if (isAbm) {
+            flagBtnNew = false;
+            flagBtnEdit = false;
+            turnOnOffInitComponent(true);
+            fillFieldFromJListAuthors(lstAuthors.getSelectedIndex());
+        } else {
+            this.dispose();    
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         if (validateFill()){
-        
             simpleObjDao = new AuthorDao();
-
-            String name = txtNameAuthor.getText();
-            String lastname = txtLastnameAuthor.getText();
-
-            AuthorDTO author = new AuthorDTO();
-            author.setName(name);
-            author.setLastname(lastname);
-            int result = 0;
+            AuthorDTO author = new AuthorDTO(0,
+                    txtNameAuthor.getText(),
+                    txtLastnameAuthor.getText());
             if (flagBtnNew){
-                try {
-                    result = simpleObjDao.insert(author);
-                } catch (SQLException e) {
-                     System.out.println("Excepcion en el insert de nuevo autor");
-                      e.printStackTrace();
-                }
-                if (result > 0){
-                    JOptionPane.showMessageDialog(null, "Se agrego correctamente el autor "+author.getName()+" "+author.getLastname());
-                    fillAuthorsBook();
-                }else {
-                    JOptionPane.showMessageDialog(null, "No se agrego correctamente el autor");
-                }
+                insertNewAuthor(simpleObjDao,author);
                 flagBtnNew = false;
             } else if (flagBtnEdit) {
-                author.setId(listAuthor.get(lstAuthors.getSelectedIndex()).getId());
-                try {
-                    result = simpleObjDao.update(author);
-                } catch (SQLException e) {
-                    System.out.println("Excepcion en el update de nuevo autor");
-                      e.printStackTrace();
-                }
-                if (result > 0){
-                    JOptionPane.showMessageDialog(null, "Se actualizo correctamente el autor");
-                    fillAuthorsBook();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se actualizo correctamente el autor");
-                }
+                updateAuthor(simpleObjDao, author);
                 flagBtnEdit = false;
             }
             turnOnOffInitComponent(true);
@@ -289,7 +264,7 @@ public class jdAuthors extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                jdAuthors dialog = new jdAuthors(new javax.swing.JFrame(), true);
+                jdAuthors dialog = new jdAuthors(new javax.swing.JFrame(), true, true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -299,6 +274,49 @@ public class jdAuthors extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private void insertNewAuthor (SimpleObjDao obj, AuthorDTO author) {
+        int result = 0;
+        int response = -1;
+        try {
+            response = JOptionPane.showConfirmDialog(null, 
+                    "¿Esta seguro que quiere agregar al autor "+author.getName()+" "+author.getLastname()+" ?", 
+                    "Alerta!", JOptionPane.YES_NO_OPTION);
+            if (response == 0)
+                result = obj.insert(author);
+            else
+                btnCancelActionPerformed(null);
+        } catch (SQLException ex) {
+            System.out.println("Excepcion en el insert de nuevo autor");
+             Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex); 
+            }
+        if (result > 0){
+            JOptionPane.showMessageDialog(null, "Se agrego correctamente el autor");
+            if (isAbm)
+                fillAuthorsBook();
+            else
+                this.dispose(); 
+        }else if (response == 0 && result < 0){
+            JOptionPane.showMessageDialog(null, "No se agrego correctamente el autor");
+        }
+    }
+    
+    private void updateAuthor (SimpleObjDao obj, AuthorDTO author) {
+        int result = 0;
+        author.setId(listAuthor.get(lstAuthors.getSelectedIndex()).getId());
+        try {
+            result = obj.update(author);
+        } catch (SQLException ex) {
+            System.out.println("Excepcion en el update de nuevo autor");
+            Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex); 
+        }
+        if (result > 0){
+            JOptionPane.showMessageDialog(null, "Se actualizo correctamente el autor");
+            fillAuthorsBook();
+        } else {
+            JOptionPane.showMessageDialog(null, "No se actualizo correctamente el autor");
+        }
     }
     
     private void fillAuthorsBook(){
@@ -313,8 +331,10 @@ public class jdAuthors extends javax.swing.JDialog {
     }
     
     private void fillFieldFromJListAuthors(int i){
-        txtLastnameAuthor.setText(listAuthor.get(i).getLastname());
-        txtNameAuthor.setText(listAuthor.get(i).getName());
+        if (i >= 0) {
+            txtLastnameAuthor.setText(listAuthor.get(i).getLastname());
+            txtNameAuthor.setText(listAuthor.get(i).getName());   
+        }
     }
     
     private void cleanField(){
@@ -324,6 +344,8 @@ public class jdAuthors extends javax.swing.JDialog {
     
     private void turnOnOffInitComponent(boolean x){
         lstAuthors.setEnabled(x);
+        txtSearch.setEnabled(x);
+        btnSearch.setEnabled(x);
         txtLastnameAuthor.setEnabled(!x);
         txtNameAuthor.setEnabled(!x);
         btnNew.setEnabled(x);
@@ -348,6 +370,16 @@ public class jdAuthors extends javax.swing.JDialog {
         }
         return validate;
     }    
+    
+    private void initialComponents(boolean isAbm){
+        if (isAbm){
+            fillAuthorsBook();
+            turnOnOffInitComponent(true);    
+        }else {
+            lstAuthors.setVisible(false);
+            btnNewActionPerformed(null);
+        }
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;

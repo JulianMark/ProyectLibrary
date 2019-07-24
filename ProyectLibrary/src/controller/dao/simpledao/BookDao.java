@@ -22,15 +22,15 @@ public class BookDao implements SimpleObjDao<BookDTO>{
     
     private Connection userConn;
 
-    private final String SQL_INSERT = "INSERT INTO books (name, id_author, id_gender) VALUES(?,?,?)";
+    private final String SQL_INSERT = "INSERT INTO books (name, id_author, id_gender, available) VALUES(?,?,?,?)";
 
     private final String SQL_UPDATE = "UPDATE books SET name= ?, id_author= ?, id_gender= ? WHERE id= ?";
 
     private final String SQL_DELETE = "DELETE FROM books WHERE id = ?";
 
-    private final String SQL_SELECT = "SELECT id, name, id_author, id_gender FROM books ORDER BY name";
+    private final String SQL_SELECT = "SELECT id, name, id_author, id_gender, available FROM books ORDER BY name";
 
-    private final String SQL_SELECT_FOR_NAME = "SELECT id, name, id_author, id_gender FROM books \n" +
+    private final String SQL_SELECT_FOR_NAME = "SELECT id, name, id_author, id_gender, available FROM books \n" +
                                                "WHERE name like ?\n" +
                                                "ORDER BY name";
     
@@ -51,8 +51,9 @@ public class BookDao implements SimpleObjDao<BookDTO>{
             stmt = conn.prepareStatement(SQL_INSERT);
             int index = 1;
             stmt.setString(index++, book.getName());
+            stmt.setInt(index++, book.getIdAuthor());
             stmt.setInt(index++, book.getIdGender());
-            stmt.setInt(index, book.getIdAuthor());
+            stmt.setBoolean(index, book.isAvailable());
             System.out.println("Ejecutando query:" + SQL_INSERT);
             rows = stmt.executeUpdate();
             System.out.println("Registros afectados:" + rows);
@@ -127,11 +128,8 @@ public class BookDao implements SimpleObjDao<BookDTO>{
                 String nameTemp = rs.getString(2);
                 int idAuthorTemp = rs.getInt(3);
                 int idGenderTemp = rs.getInt(4);
-                bookDTO = new BookDTO();
-                bookDTO.setId(idTemp);
-                bookDTO.setName(nameTemp);
-                bookDTO.setIdAuthor(idAuthorTemp);
-                bookDTO.setIdGender(idGenderTemp);
+                boolean availableTemp = rs.getBoolean(5);
+                bookDTO = new BookDTO(idTemp, nameTemp, idAuthorTemp, idGenderTemp, availableTemp);
                 books.add(bookDTO);
             }
         } finally {
@@ -165,11 +163,8 @@ public class BookDao implements SimpleObjDao<BookDTO>{
                 String nameTemp = rs.getString(2);
                 int idAuthorTemp = rs.getInt(3);
                 int idGenderTemp = rs.getInt(4);
-                bookDTO = new BookDTO();
-                bookDTO.setId(idTemp);
-                bookDTO.setName(nameTemp);
-                bookDTO.setIdAuthor(idAuthorTemp);
-                bookDTO.setIdGender(idGenderTemp);
+                boolean availableTemp = rs.getBoolean(5);
+                bookDTO = new BookDTO(idTemp, nameTemp, idAuthorTemp, idGenderTemp, availableTemp);
                 books.add(bookDTO);
             }
         } finally {

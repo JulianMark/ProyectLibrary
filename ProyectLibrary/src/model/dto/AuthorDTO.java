@@ -13,13 +13,12 @@ public class AuthorDTO extends SimpleObjDTO{
     private String name;
     private String lastname;
 
-    public AuthorDTO() {
+    public AuthorDTO(int id, String name, String lastname) {
+        super.id = id;
+        this.name = name;
+        this.lastname = lastname;
     }
-
-    public AuthorDTO(int id) {
-        super (id);
-    }
-
+    
     public String getName() {
         return name;
     }

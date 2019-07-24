@@ -13,14 +13,17 @@ public class BookDTO extends SimpleObjDTO{
     private String name;
     private int idGender;
     private int idAuthor;
+    private boolean available;
 
-    public BookDTO() {
+    public BookDTO(int id, String name, int idAuthor, int idGender, boolean available) {
+        super.id = id;
+        this.name = name;
+        this.idAuthor = idAuthor;
+        this.idGender = idGender;
+        this.available = available;
     }
-
-    public BookDTO(int id) {
-        this.id = id;
-    }
-
+    
+    
     public String getName() {
         return name;
     }
@@ -45,6 +48,14 @@ public class BookDTO extends SimpleObjDTO{
         this.idAuthor = idAuthor;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+    
     @Override
     public String toString() {
         return name;
