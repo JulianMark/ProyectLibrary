@@ -298,7 +298,7 @@ public class jdAuthors extends javax.swing.JDialog {
         btnCancel.setEnabled(!x);
     }
     
-    private void insertNewAuthor (SimpleObjDao obj, AuthorDTO author) {
+    private void insertNewAuthor (SimpleObjDao simpleObjDao, AuthorDTO author) {
         int result = 0;
         int response = -1;
         try {
@@ -306,7 +306,7 @@ public class jdAuthors extends javax.swing.JDialog {
                 "¿Esta seguro que quiere agregar al autor "+author.getName()+" "+author.getLastname()+" ?", 
                 "Alerta!", JOptionPane.YES_NO_OPTION);
             if (response == 0)
-                result = obj.insert(author);
+                result = simpleObjDao.insert(author);
             else
                 actionCancelButton();
         } catch (SQLException ex) {

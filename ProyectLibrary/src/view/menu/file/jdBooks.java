@@ -213,42 +213,19 @@ public class jdBooks extends javax.swing.JDialog {
             
             simpleObjDao = new BookDao();
 
-            String nameBook = txtNameBook.getText();
             AuthorDTO author = (AuthorDTO) cboAuthorsBook.getSelectedItem();
             GenderDTO gender = (GenderDTO) cboGendersBook.getSelectedItem();
-            boolean available = chkAvailable.isSelected();
 
-            BookDTO book = new BookDTO(0,nameBook,author.getId(), gender.getId(),available);
-            
-            int result = 0;
+            BookDTO book = new BookDTO(0,
+                    txtNameBook.getText(),
+                    author.getId(), 
+                    gender.getId(),
+                    chkAvailable.isSelected());
             if (flagBtnNew){
-                try {
-                    result = simpleObjDao.insert(book); 
-                } catch (SQLException ex) {
-                  System.out.println("Excepcion en el insert de nuevo libro");
-                  Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                if (result > 0){
-                    JOptionPane.showMessageDialog(null, "Se agrego correctamente el libro "+book.getName());
-                    fillBooksList();
-                }else {
-                    JOptionPane.showMessageDialog(null, "No se agrego correctamente el libro");
-                }
+                insertBook(simpleObjDao, book);
                 flagBtnNew = false;
             }else if (flagBtnEdit) {
-                book.setId(listBooks.get(lstBooks.getSelectedIndex()).getId());
-                try {
-                    result = simpleObjDao.update(book); 
-                } catch (SQLException ex) {
-                  System.out.println("Excepcion en el update de un libro");
-                  Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex); 
-                }
-                if (result > 0){
-                    JOptionPane.showMessageDialog(null, "Se actualizo correctamente el libro");
-                    fillBooksList();
-                }else {
-                    JOptionPane.showMessageDialog(null, "No se actualizo correctamente el libro");
-                }
+                updateBook(simpleObjDao, book);
                 flagBtnEdit = false;
             }
             turnOnOffInitComponent(true);
@@ -482,6 +459,56 @@ public class jdBooks extends javax.swing.JDialog {
             }
         }
         return result;
+    }
+    
+    private void insertBook (SimpleObjDao obj, BookDTO book){
+        int result = 0;
+        int response = -1;
+        
+        try {
+            response = JOptionPane.showConfirmDialog(null, 
+            "¿Esta seguro que quiere agregar el libro "+book.getName()+" ?", 
+            "Alerta!", JOptionPane.YES_NO_OPTION);
+            if (response ==0)
+                result = obj.insert(book);
+            else
+                btnCancelActionPerformed(null);
+        } catch (SQLException ex) {
+            System.out.println("Excepcion en el insert de nuevo libro");
+            Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (result > 0){
+            JOptionPane.showMessageDialog(null, "Se agrego correctamente el libro "+book.getName());
+            fillBooksList();
+        }else {
+            JOptionPane.showMessageDialog(null, "No se agrego correctamente el libro");
+        }
+    }
+    
+    private void updateBook (SimpleObjDao obj, BookDTO book){
+        int result = 0;
+        int response = -1;
+        book.setId(listBooks.get(lstBooks.getSelectedIndex()).getId());
+        try {
+            response = JOptionPane.showConfirmDialog(null, 
+                "¿Esta seguro que quiere actualizar el libro "+book.getName()+" ?", 
+                "Alerta!", JOptionPane.YES_NO_OPTION);
+            if(response ==0)
+                result = obj.update(book);
+            else
+                btnCancelActionPerformed(null);
+        } catch (SQLException ex) {
+            System.out.println("Excepcion en el update de un libro");
+            Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex); 
+        }
+        if (result > 0){
+            JOptionPane.showMessageDialog(null, "Se actualizo correctamente el libro");
+            int indexBook = lstBooks.getSelectedIndex();
+            fillBooksList();
+            lstBooks.setSelectedIndex(indexBook);
+        }else {
+            JOptionPane.showMessageDialog(null, "No se actualizo correctamente el libro");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
