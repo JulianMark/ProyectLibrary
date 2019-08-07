@@ -461,6 +461,20 @@ public class jdBooks extends javax.swing.JDialog {
         return result;
     }
     
+    private int focusLstBooks(){
+        int maxId = 0;
+        int index = 0;
+        for (int i = 0; i < listBooks.size(); i++) {
+           
+            if (maxId < listBooks.get(i).getId()){
+                maxId = listBooks.get(i).getId();
+                index = i; 
+            }        
+        } 
+        return index;
+    } 
+        
+   
     private void insertBook (SimpleObjDao obj, BookDTO book){
         int result = 0;
         int response = -1;
@@ -480,6 +494,7 @@ public class jdBooks extends javax.swing.JDialog {
         if (result > 0){
             JOptionPane.showMessageDialog(null, "Se agrego correctamente el libro "+book.getName());
             fillBooksList();
+            lstBooks.setSelectedIndex(focusLstBooks());
         }else {
             JOptionPane.showMessageDialog(null, "No se agrego correctamente el libro");
         }
