@@ -5,6 +5,12 @@
  */
 package view;
 
+import controller.dao.simpledao.RebootDataBase;
+import controller.dao.simpledao.RebootDbDao;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import view.menu.file.jdAuthors;
 import view.menu.file.jdBooks;
 import view.menu.file.jdGenders;
@@ -14,13 +20,14 @@ import view.menu.file.jdGenders;
  * @author Nana
  */
 public class frmPrincipal extends javax.swing.JFrame {
-
+    private final RebootDbDao reboot;
     /**
      * Creates new form frmPrincipal
      */
     public frmPrincipal() {
         initComponents();
         this.setLocationRelativeTo(null);
+        reboot = new RebootDataBase();
     }
 
     /**
@@ -38,6 +45,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         goToWindowAuthors = new javax.swing.JMenuItem();
         goToWindowGenders = new javax.swing.JMenuItem();
         menuOptionsFrmPrincipal = new javax.swing.JMenu();
+        btnRebootDB = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,6 +78,15 @@ public class frmPrincipal extends javax.swing.JFrame {
         menuFrmPrincipal.add(menuFileFrmPrincipal);
 
         menuOptionsFrmPrincipal.setText("Opciones");
+
+        btnRebootDB.setText("Reiniciar Base de datos");
+        btnRebootDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRebootDBActionPerformed(evt);
+            }
+        });
+        menuOptionsFrmPrincipal.add(btnRebootDB);
+
         menuFrmPrincipal.add(menuOptionsFrmPrincipal);
 
         setJMenuBar(menuFrmPrincipal);
@@ -105,6 +122,22 @@ public class frmPrincipal extends javax.swing.JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowGendersActionPerformed
+
+    private void btnRebootDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRebootDBActionPerformed
+        try {
+            int response = JOptionPane.showConfirmDialog(null, 
+                "¿Esta seguro que desea reiniciar la base de datos? Todos los datos predefinidos volveran a su estado inicial y los demás se borraran.",
+                "Alerta!", JOptionPane.YES_NO_OPTION);
+            if (response == 0){
+                int result = reboot.ejecute();
+                if (result > 0){
+                    JOptionPane.showMessageDialog(null, "La base se reinicio de forma satisfactoria");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRebootDBActionPerformed
 
     /**
      * @param args the command line arguments
@@ -142,6 +175,7 @@ public class frmPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnRebootDB;
     private javax.swing.JMenuItem goToWindowAuthors;
     private javax.swing.JMenuItem goToWindowBooks;
     private javax.swing.JMenuItem goToWindowGenders;

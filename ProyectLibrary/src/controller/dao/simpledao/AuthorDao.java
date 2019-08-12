@@ -66,7 +66,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
 
     @Override
     public int update(AuthorDTO author) throws SQLException {
-         Connection conn = null;
+        Connection conn = null;
         PreparedStatement stmt = null;
         int rows = 0;
         try {
@@ -111,7 +111,7 @@ public class AuthorDao implements SimpleObjDao <AuthorDTO>{
 
     @Override
     public List<AuthorDTO> select() throws SQLException {
-         Connection conn = null;
+        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         AuthorDTO authorDTO;
