@@ -118,7 +118,7 @@ public class frmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_goToWindowAuthorsActionPerformed
 
     private void goToWindowGendersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToWindowGendersActionPerformed
-        jdGenders dialog = new jdGenders (this,true);
+        jdGenders dialog = new jdGenders (this,true,true);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_goToWindowGendersActionPerformed

@@ -24,17 +24,19 @@ public class jdGenders extends javax.swing.JDialog {
     private List <GenderDTO> listGender;
     private boolean flagBtnNew;
     private boolean flagBtnEdit;
+    private final boolean isAbm;
 
     /**
      * Creates new form jdGenders
      * @param parent
      * @param modal
+     * @param isAbm
      */
-    public jdGenders(java.awt.Frame parent, boolean modal) {
+    public jdGenders(java.awt.Frame parent, boolean modal, boolean isAbm) {
         super(parent, modal);
         initComponents();
-        fillGendersBook();
-        turnOnOffInitComponent(true);
+        this.isAbm = isAbm;
+        initialComponents(isAbm);
     }
 
     /**
@@ -164,9 +166,7 @@ public class jdGenders extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstGendersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstGendersValueChanged
-        if (lstGenders.getSelectedIndex() >= 0){
-            fillFieldFromJlistGender(lstGenders.getSelectedIndex());
-        }
+        fillFieldFromJlistGender(lstGenders.getSelectedIndex());
     }//GEN-LAST:event_lstGendersValueChanged
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
@@ -187,54 +187,30 @@ public class jdGenders extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        flagBtnNew = false;
-        flagBtnEdit = false;
-        turnOnOffInitComponent(true);
-        fillFieldFromJlistGender(lstGenders.getSelectedIndex());
+        int response = JOptionPane.showConfirmDialog(null, 
+                "¿Esta seguro que desea cancelar? Todos los datos que no fueron guardados se perderan.",
+                "Alerta!", JOptionPane.YES_NO_OPTION);
+        if (response == 0){
+            actionCancelButton();
+        }else {
+            txtDescription.requestFocus();
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         if (validateFill()){
-            
             simpleObjDao = new GenderDao();
-            
-            String description = txtDescription.getText();
-            
             GenderDTO gender = new GenderDTO();
-            gender.setDescription(description);
-            int result = 0;
-            if (flagBtnNew) {
-                try {
-                    result = simpleObjDao.insert(gender);    
-                } catch (Exception e) {
-                    System.out.println("Excepcion en el insert de nuevo genero");
-                      e.printStackTrace();
-                }
-                if (result > 0){
-                    JOptionPane.showMessageDialog(null, "Se agrego correctamente el genero "+gender.getDescription());
-                    fillGendersBook();
-                } else{
-                    JOptionPane.showMessageDialog(null, "No se agrego correctamente el genero");
-                }
+                    txtDescription.getText();
+            if (flagBtnNew){
+                insertNewGender(simpleObjDao,gender);
                 flagBtnNew = false;
             } else if (flagBtnEdit) {
-                gender.setId(listGender.get(lstGenders.getSelectedIndex()).getId());
-                try {
-                    result = simpleObjDao.update(gender);
-                } catch (Exception e) {
-                    System.out.println("Excepcion en el update de nuevo genero");
-                      e.printStackTrace();
-                }
-                if (result > 0){
-                    JOptionPane.showMessageDialog(null, "Se actualizo correctamente el genero");
-                    fillGendersBook();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se actualizo correctamente el genero");
-                } 
+                updateGender(simpleObjDao, gender);
                 flagBtnEdit = false;
-            } 
+            }
             turnOnOffInitComponent(true);
-        }
+        }    
     }//GEN-LAST:event_btnSendActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
@@ -282,7 +258,7 @@ public class jdGenders extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                jdGenders dialog = new jdGenders(new javax.swing.JFrame(), true);
+                jdGenders dialog = new jdGenders(new javax.swing.JFrame(), true, true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -306,12 +282,14 @@ public class jdGenders extends javax.swing.JDialog {
         }
     }
 
-    private void fillFieldFromJlistGender(int i){
-        txtDescription.setText(listGender.get(i).getDescription());
-    }
-    
-    private void cleanField(){
-        txtDescription.setText("");
+    private void initialComponents(boolean isAbm){
+        if (isAbm){
+            fillGendersBook();
+            turnOnOffInitComponent(true);    
+        }else {
+            lstGenders.setVisible(false);
+            btnNewActionPerformed(null);
+        }
     }
     
     private void turnOnOffInitComponent(boolean x){
@@ -323,6 +301,16 @@ public class jdGenders extends javax.swing.JDialog {
         btnCancel.setEnabled(!x);
     }
     
+    private void fillFieldFromJlistGender(int i){
+        if (i >= 0){
+            txtDescription.setText(listGender.get(i).getDescription());
+        }
+    }
+    
+    private void cleanField(){
+        txtDescription.setText("");
+    }
+    
     private boolean validateFill() {
         boolean validate = true;
         if (txtDescription.getText().equals("")){
@@ -332,6 +320,84 @@ public class jdGenders extends javax.swing.JDialog {
             return validate;
         }
         return validate;
+    }
+
+    private void insertNewGender (SimpleObjDao simpleObjDao, GenderDTO gender) {
+        int result = 0;
+        int response = -1;
+        try {
+            response = JOptionPane.showConfirmDialog(null, 
+                "¿Esta seguro que quiere agregar el genero "+gender.getDescription()+" "+" ?", 
+                "Alerta!", JOptionPane.YES_NO_OPTION);
+            if (response == 0)
+                result = simpleObjDao.insert(gender);
+            else
+                actionCancelButton();
+        } catch (SQLException ex) {
+            System.out.println("Excepcion en el insert de nuevo genero");
+             Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex); 
+            }
+        if (result > 0){
+            JOptionPane.showMessageDialog(null, "Se agrego correctamente el genero");
+            if (isAbm){
+                fillGendersBook();
+                lstGenders.setSelectedIndex(focusLstGender());
+            }
+            else
+                this.dispose(); 
+        }else if (response == 0 && result < 0){
+            JOptionPane.showMessageDialog(null, "No se agrego correctamente el genero");
+        }
+    }
+    
+    private void updateGender (SimpleObjDao obj, GenderDTO gender) {
+        int result = 0;
+        int response = -1;
+        gender.setId(listGender.get(lstGenders.getSelectedIndex()).getId());
+        try {
+            response = JOptionPane.showConfirmDialog(null, 
+                "¿Esta seguro que quiere actualizar el genero "+gender.getDescription()+" "+" ?", 
+                "Alerta!", JOptionPane.YES_NO_OPTION);
+            if (response == 0)
+                result = obj.update(gender);
+            else
+                actionCancelButton();
+        } catch (SQLException ex) {
+            System.out.println("Excepcion en el update de nuevo genero");
+            Logger.getLogger(jdBooks.class.getName()).log(Level.SEVERE, null, ex); 
+        }
+        if (result > 0){
+            JOptionPane.showMessageDialog(null, "Se actualizo correctamente el genero");
+            int indexAuthor = lstGenders.getSelectedIndex();
+            fillGendersBook();
+            lstGenders.setSelectedIndex(indexAuthor);
+        } else if (response == 0 && result < 0) {
+            JOptionPane.showMessageDialog(null, "No se actualizo correctamente el genero");
+        }
+    }
+    
+    private int focusLstGender() {
+        int maxId = 0;
+        int index = 0;
+        for (int i = 0; i < listGender.size(); i++) {
+            
+            if (maxId < listGender.get(i).getId()){
+                maxId = listGender.get(i).getId();
+                index = i;
+            }
+        }
+        return index;
+    }
+    
+    private void actionCancelButton(){
+        if (isAbm) {
+            flagBtnNew = false;
+            flagBtnEdit = false;
+            turnOnOffInitComponent(true);
+            fillFieldFromJlistGender(lstGenders.getSelectedIndex());
+        } else {
+            this.dispose();    
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
